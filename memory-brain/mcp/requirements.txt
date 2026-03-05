@@ -1,0 +1,6 @@
+fastmcp
+asyncpg
+httpx
+pydantic
+anthropic
+python-dotenv
