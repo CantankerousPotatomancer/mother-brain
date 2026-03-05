@@ -1,4 +1,4 @@
-# Tasks: Claude Memory Brain
+# Tasks: Claude Mother Brain
 
 Check off tasks as you complete them. Work top to bottom — each section depends on the previous.
 

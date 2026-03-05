@@ -2,7 +2,7 @@ import httpx
 import logging
 from config import config
 
-logger = logging.getLogger("memory-brain.embeddings")
+logger = logging.getLogger("mother-brain.embeddings")
 
 _client: httpx.AsyncClient | None = None
 

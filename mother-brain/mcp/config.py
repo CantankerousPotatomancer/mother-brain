@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-logger = logging.getLogger("memory-brain")
+logger = logging.getLogger("mother-brain")
 
 
 class Config:

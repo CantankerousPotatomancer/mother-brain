@@ -1,8 +1,8 @@
-# Agent Instructions: Claude Memory Brain
+# Agent Instructions: Claude Mother Brain
 
 ## Your Mission
 
-Build the complete `memory-brain` MCP server as specified in `prd.md`. This is a self-hosted memory system for Claude — a PostgreSQL-backed MCP server with semantic search, structured fact storage, and full lifecycle management for entities, facts, events, obligations, and goals.
+Build the complete `mother-brain` MCP server as specified in `prd.md`. This is a self-hosted memory system for Claude — a PostgreSQL-backed MCP server with semantic search, structured fact storage, and full lifecycle management for entities, facts, events, obligations, and goals.
 
 When you are done, the user should be able to run `docker compose up` and have a fully working MCP server ready to connect to Claude.
 
@@ -75,7 +75,7 @@ When you are done, the user should be able to run `docker compose up` and have a
 ## File Structure to Produce
 
 ```
-memory-brain/
+mother-brain/
 ├── docker-compose.yml
 ├── .env.example
 ├── README.md

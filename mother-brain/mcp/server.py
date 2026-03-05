@@ -7,13 +7,13 @@ from db import init_pool, close_pool
 from embeddings import close_client as close_embeddings_client
 from tools import read, write
 
-logger = logging.getLogger("memory-brain.server")
+logger = logging.getLogger("mother-brain.server")
 
 
 @asynccontextmanager
 async def lifespan(app):
     """Manage startup and shutdown of the MCP server."""
-    logger.info("Starting Memory Brain MCP server...")
+    logger.info("Starting Mother Brain MCP server...")
     pool = await init_pool()
 
     # Verify postgres connection
@@ -21,16 +21,16 @@ async def lifespan(app):
         version = await conn.fetchval("SELECT version()")
         logger.info(f"Connected to PostgreSQL: {version[:60]}...")
 
-    logger.info("Memory Brain MCP server ready")
+    logger.info("Mother Brain MCP server ready")
     yield
-    logger.info("Shutting down Memory Brain MCP server...")
+    logger.info("Shutting down Mother Brain MCP server...")
     await close_pool()
     await close_embeddings_client()
-    logger.info("Memory Brain MCP server stopped")
+    logger.info("Mother Brain MCP server stopped")
 
 
 mcp = FastMCP(
-    "Memory Brain",
+    "Mother Brain",
     description="Persistent structured memory for Claude — facts, summaries, events, obligations, and goals with semantic search.",
     lifespan=lifespan,
 )

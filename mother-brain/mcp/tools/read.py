@@ -8,7 +8,7 @@ from models.schemas import (
     RecallResult, RecallResultItem, UpcomingResult,
 )
 
-logger = logging.getLogger("memory-brain.tools.read")
+logger = logging.getLogger("mother-brain.tools.read")
 
 # Session-level hit tracker for auto-promotion (keyed by entity_id)
 _session_hits: dict[UUID, int] = {}

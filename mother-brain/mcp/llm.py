@@ -2,7 +2,7 @@ import anthropic
 import logging
 from config import config
 
-logger = logging.getLogger("memory-brain.llm")
+logger = logging.getLogger("mother-brain.llm")
 
 _client: anthropic.AsyncAnthropic | None = None
 

@@ -1,4 +1,4 @@
-# PRD: Claude Memory Brain — MCP Server
+# PRD: Claude Mother Brain — MCP Server
 
 ## Overview
 
@@ -405,7 +405,7 @@ Auto-expire: checked on `get_working_memory()` call, expired rows removed.
 ## Project Structure
 
 ```
-memory-brain/
+mother-brain/
 ├── docker-compose.yml
 ├── .env.example
 ├── README.md
@@ -525,7 +525,7 @@ services:
     ports:
       - "${MCP_SERVER_PORT}:${MCP_SERVER_PORT}"
     labels:
-      - "com.docker.compose.project=memory-brain"
+      - "com.docker.compose.project=mother-brain"
 
 volumes:
   memory_pgdata:
