@@ -125,7 +125,7 @@ async def upsert_entity(
     if existing_id:
         if aliases:
             await pool.execute(
-                "UPDATE entities SET aliases = aliases || $1, updated_at = NOW() "
+                "UPDATE entities SET aliases = ARRAY(SELECT DISTINCT unnest(aliases || $1)), updated_at = NOW() "
                 "WHERE id = $2",
                 aliases, existing_id,
             )
@@ -215,7 +215,7 @@ async def merge_entities(keep_id: str, discard_id: str) -> dict:
             discard_aliases = discard_entity["aliases"] or []
             new_aliases = discard_aliases + [discard_entity["name"]]
             await conn.execute(
-                "UPDATE entities SET aliases = aliases || $1, updated_at = NOW() "
+                "UPDATE entities SET aliases = ARRAY(SELECT DISTINCT unnest(aliases || $1)), updated_at = NOW() "
                 "WHERE id = $2",
                 new_aliases, keep_uuid,
             )
