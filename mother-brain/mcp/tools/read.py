@@ -294,18 +294,42 @@ async def recent_episodes(n: int = 5) -> list[dict]:
 
 
 async def search_facts(query: str, limit: int = 10) -> list[dict]:
-    """Full-text search across fact content."""
+    """Keyword search across fact content. Splits multi-word queries into
+    individual terms and matches with AND logic, falling back to OR."""
     pool = await get_pool()
 
-    # Use ILIKE for simple text search
-    rows = await pool.fetch(
-        "SELECT f.*, e.name AS entity_name FROM facts f "
-        "JOIN entities e ON e.id = f.entity_id "
-        "WHERE f.valid_until IS NULL AND f.content ILIKE '%' || $1 || '%' "
-        "ORDER BY f.created_at DESC LIMIT $2",
-        query,
-        limit,
+    terms = query.strip().split()
+    if not terms:
+        return []
+
+    # Build AND conditions: every term must appear in content
+    conditions_and = " AND ".join(
+        f"f.content ILIKE '%' || ${i+1} || '%'" for i, _ in enumerate(terms)
     )
+    params = [*terms, limit]
+    limit_param = f"${len(params)}"
+
+    rows = await pool.fetch(
+        f"SELECT f.*, e.name AS entity_name FROM facts f "
+        f"JOIN entities e ON e.id = f.entity_id "
+        f"WHERE f.valid_until IS NULL AND ({conditions_and}) "
+        f"ORDER BY f.created_at DESC LIMIT {limit_param}",
+        *params,
+    )
+
+    # Fallback: OR logic if AND returned nothing
+    if not rows and len(terms) > 1:
+        conditions_or = " OR ".join(
+            f"f.content ILIKE '%' || ${i+1} || '%'" for i, _ in enumerate(terms)
+        )
+        rows = await pool.fetch(
+            f"SELECT f.*, e.name AS entity_name FROM facts f "
+            f"JOIN entities e ON e.id = f.entity_id "
+            f"WHERE f.valid_until IS NULL AND ({conditions_or}) "
+            f"ORDER BY f.created_at DESC LIMIT {limit_param}",
+            *params,
+        )
+
     facts = [Fact(**dict(r)) for r in rows]
     if rows:
         await touch("facts", [r["id"] for r in rows])
