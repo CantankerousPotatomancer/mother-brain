@@ -85,11 +85,70 @@ Replace `<your-server-ip>` with your server's IP address or hostname.
 
 ## Portainer Deployment
 
-1. Open Portainer UI
-2. Go to **Stacks** -> **Add Stack**
-3. Upload `portainer/stack.yml` or paste its contents
-4. Set environment variables in the Portainer UI (same as `.env`)
-5. Deploy
+Portainer is a great way to manage Mother Brain — you get stack health monitoring, per-container logs, and one-click start/stop from the UI. There's one gotcha to be aware of before you deploy.
+
+### The Bind Mount Problem
+
+The `portainer/stack.yml` references the SQL init scripts using relative paths:
+
+```yaml
+- ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+- ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+```
+
+Portainer stacks don't have a working directory, so relative paths like `./db/` won't resolve — the database will start without being initialized and the MCP server will fail to connect.
+
+The fix is straightforward: **replace the relative paths with absolute paths** pointing to wherever you cloned the repo on your host.
+
+### Step-by-Step
+
+1. Clone the repo to your server:
+
+```bash
+git clone git@github.com:CantankerousPotatomancer/mother-brain.git ~/repos/mother-brain
+```
+
+2. Open `portainer/stack.yml` in a text editor and replace the two bind mount lines under `memory-postgres` with absolute paths. For example, if you cloned to `/home/youruser/repos/mother-brain`:
+
+```yaml
+volumes:
+  - memory_pgdata:/var/lib/postgresql/data
+  - /home/youruser/repos/mother-brain/mother-brain/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+  - /home/youruser/repos/mother-brain/mother-brain/db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+```
+
+3. In Portainer, go to **Stacks** → **Add Stack**.
+
+4. Paste the contents of your edited `stack.yml` into the web editor.
+
+5. Scroll down to **Environment variables** and add the following:
+
+| Variable | Value |
+|----------|-------|
+| `POSTGRES_DB` | `memory_brain` |
+| `POSTGRES_USER` | `memory` |
+| `POSTGRES_PASSWORD` | *(choose a secure password)* |
+| `POSTGRES_PORT` | `5432` |
+| `OLLAMA_MODEL` | `nomic-embed-text` |
+| `ANTHROPIC_API_KEY` | *(your Anthropic API key)* |
+| `MCP_SERVER_PORT` | `8765` |
+| `MCP_LOG_LEVEL` | `INFO` |
+
+6. Click **Deploy the stack**.
+
+### First Boot
+
+On first boot, the `ollama-init` container pulls the `nomic-embed-text` embedding model (~270 MB). This is a one-shot container — it will show as **stopped** in Portainer once the pull completes, which is expected. The `memory-mcp` container won't start until both postgres and ollama are healthy, so give it a minute or two.
+
+Check that everything came up cleanly by clicking into the `memory-mcp` container logs in Portainer and looking for:
+
+```
+Mother Brain MCP server ready
+```
+
+### Subsequent Restarts
+
+The ollama model is stored in the `memory_ollama_data` volume, so it does not need to be re-downloaded on restart. The `ollama-init` container is `restart: "no"` and will remain in a stopped state — this is normal and harmless.
 
 ## Inspecting the Database with pgAdmin
 
