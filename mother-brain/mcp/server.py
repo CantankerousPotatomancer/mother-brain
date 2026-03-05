@@ -84,7 +84,9 @@ async def recent_episodes(n: int = 5) -> list:
 
 @mcp.tool()
 async def search_facts(query: str, limit: int = 10) -> list:
-    """Full-text search across all active fact content. Use when the entity is unknown."""
+    """Keyword search across raw fact content. Splits multi-word queries into individual terms
+    and matches facts containing ALL terms (falls back to ANY term if no results).
+    Best for exact name, date, or identifier lookups. Use `recall` for semantic/conceptual queries."""
     return await read.search_facts(query, limit)
 
 
