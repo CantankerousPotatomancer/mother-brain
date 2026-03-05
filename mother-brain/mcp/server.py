@@ -31,7 +31,7 @@ async def lifespan(app):
 
 mcp = FastMCP(
     "Mother Brain",
-    description="Persistent structured memory for Claude — facts, summaries, events, obligations, and goals with semantic search.",
+    instructions="Persistent structured memory for Claude — facts, summaries, events, obligations, and goals with semantic search.",
     lifespan=lifespan,
 )
 
@@ -171,4 +171,8 @@ async def activate(entity_name: str, reason: str | None = None, days: int = 7) -
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=config.MCP_SERVER_PORT)
+    mcp.run(
+        transport="streamable-http",
+        host="0.0.0.0",
+        port=config.MCP_SERVER_PORT,
+    )
