@@ -1,4 +1,4 @@
-# Claude Memory Brain — MCP Server
+# Claude Mother Brain — MCP Server
 
 A self-hosted MCP server that gives Claude persistent, structured memory across conversations. Stores facts, summaries, events, obligations, relationships, and episodic history, retrievable via semantic search.
 
@@ -14,7 +14,7 @@ That's it. Ollama and the embedding model are bundled in the stack.
 1. **Clone and configure:**
 
 ```bash
-cd memory-brain
+cd mother-brain
 cp .env.example .env
 ```
 
@@ -34,7 +34,7 @@ On first boot, the `ollama-init` container will automatically pull the `nomic-em
 docker compose logs -f memory-mcp
 ```
 
-You should see `Memory Brain MCP server ready` once everything is connected.
+You should see `Mother Brain MCP server ready` once everything is connected.
 
 ## Adding to Claude's MCP Config
 
@@ -43,7 +43,7 @@ Add this to your Claude MCP configuration:
 ```json
 {
   "mcpServers": {
-    "memory-brain": {
+    "mother-brain": {
       "type": "streamable-http",
       "url": "http://<your-server-ip>:8765/mcp"
     }

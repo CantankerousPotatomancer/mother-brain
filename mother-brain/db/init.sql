@@ -1,4 +1,4 @@
--- Memory Brain: Full Schema
+-- Mother Brain: Full Schema
 -- Extensions must come first
 CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

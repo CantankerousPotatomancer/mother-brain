@@ -4,7 +4,7 @@ from uuid import UUID
 from embeddings import embed
 from models.schemas import DedupResult
 
-logger = logging.getLogger("memory-brain.dedup")
+logger = logging.getLogger("mother-brain.dedup")
 
 ENTITY_SIMILARITY_THRESHOLD = 0.88
 FACT_REPLACE_THRESHOLD = 0.90

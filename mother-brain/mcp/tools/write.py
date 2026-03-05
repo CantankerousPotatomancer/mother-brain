@@ -7,7 +7,7 @@ from embeddings import embed
 from llm import generate_summary
 from dedup import resolve_entity, check_duplicate_fact
 
-logger = logging.getLogger("memory-brain.tools.write")
+logger = logging.getLogger("mother-brain.tools.write")
 
 
 async def _regenerate_summary(entity_id: UUID, entity_name: str, entity_type: str) -> None:

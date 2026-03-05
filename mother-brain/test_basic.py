@@ -1,4 +1,4 @@
-"""Basic integration test for Memory Brain MCP server.
+"""Basic integration test for Mother Brain MCP server.
 
 Run against a live stack: python test_basic.py
 Requires the stack to be running (docker compose up).
@@ -59,7 +59,7 @@ async def call_tool(client: httpx.AsyncClient, tool_name: str, arguments: dict) 
         headers=headers,
     )
 
-    # Handle SSE response
+    # Handle Streamable HTTP response
     if "text/event-stream" in resp.headers.get("content-type", ""):
         result = None
         for line in resp.text.split("\n"):
@@ -74,7 +74,7 @@ async def call_tool(client: httpx.AsyncClient, tool_name: str, arguments: dict) 
 
 
 async def main():
-    print("=== Memory Brain Integration Test ===\n")
+    print("=== Mother Brain Integration Test ===\n")
     errors = []
 
     async with httpx.AsyncClient(timeout=30.0) as client:
@@ -153,7 +153,7 @@ async def main():
         try:
             result = await call_tool(client, "log_episode", {
                 "title": "Integration test session",
-                "summary": "Ran basic integration tests against the Memory Brain MCP server. Tested entity creation, fact storage, recall, obligations, and episode logging.",
+                "summary": "Ran basic integration tests against the Mother Brain MCP server. Tested entity creation, fact storage, recall, obligations, and episode logging.",
                 "entity_names": ["TestProject"],
             })
             print(f"   Result: {result}")

@@ -3,7 +3,7 @@ import logging
 from uuid import UUID
 from config import config
 
-logger = logging.getLogger("memory-brain.db")
+logger = logging.getLogger("mother-brain.db")
 
 _pool: asyncpg.Pool | None = None
 
