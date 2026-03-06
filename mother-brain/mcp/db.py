@@ -37,9 +37,18 @@ async def close_pool() -> None:
         logger.info("Database connection pool closed")
 
 
+_TOUCHABLE_TABLES = frozenset({
+    "entities", "facts", "summaries", "episodes",
+    "working_memory", "events", "obligations", "goals", "relationships",
+})
+
+
 async def touch(table: str, ids: list[UUID]) -> None:
     """Increment touches and update last_touched for a list of UUIDs."""
     if not ids:
+        return
+    if table not in _TOUCHABLE_TABLES:
+        logger.error(f"Touch called with invalid table name: {table!r}")
         return
     try:
         pool = await get_pool()
