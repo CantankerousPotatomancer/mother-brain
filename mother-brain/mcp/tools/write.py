@@ -204,9 +204,11 @@ async def merge_entities(keep_id: str, discard_id: str) -> dict:
             )
 
             # Update entity_ids arrays in obligations, goals, events, episodes
-            for table in ["obligations", "goals", "events", "episodes"]:
+            _MERGE_TABLES = ("obligations", "goals", "events", "episodes")
+            for table in _MERGE_TABLES:
+                # table names are from a hardcoded tuple, not user input
                 await conn.execute(
-                    f"UPDATE {table} SET entity_ids = array_replace(entity_ids, $1, $2) "
+                    f'UPDATE "{table}" SET entity_ids = array_replace(entity_ids, $1, $2) '
                     f"WHERE $1 = ANY(entity_ids)",
                     discard_uuid, keep_uuid,
                 )
