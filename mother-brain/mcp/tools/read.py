@@ -154,10 +154,6 @@ async def get_facts(
     rows = await pool.fetch(query, *params)
     facts = [Fact(**dict(r)) for r in rows]
 
-    if rows:
-        await touch("facts", [r["id"] for r in rows])
-        await touch("entities", [entity_id])
-
     return [f.model_dump(mode="json") for f in facts]
 
 
@@ -199,8 +195,6 @@ async def get_working_memory() -> list[dict]:
     )
 
     entries = [WorkingMemoryEntry(**dict(r)) for r in rows]
-    if rows:
-        await touch("working_memory", [r["id"] for r in rows])
 
     return [e.model_dump(mode="json") for e in entries]
 
@@ -216,8 +210,6 @@ async def get_upcoming(days: int = 14) -> dict:
         str(days),
     )
     events = [Event(**dict(r)) for r in event_rows]
-    if event_rows:
-        await touch("events", [r["id"] for r in event_rows])
 
     ob_rows = await pool.fetch(
         "SELECT * FROM obligations "
@@ -227,8 +219,6 @@ async def get_upcoming(days: int = 14) -> dict:
         str(days),
     )
     obligations = [Obligation(**dict(r)) for r in ob_rows]
-    if ob_rows:
-        await touch("obligations", [r["id"] for r in ob_rows])
 
     return UpcomingResult(events=events, obligations=obligations).model_dump(mode="json")
 
@@ -250,8 +240,6 @@ async def get_obligations(
 
     rows = await pool.fetch(query, *params)
     obligations = [Obligation(**dict(r)) for r in rows]
-    if rows:
-        await touch("obligations", [r["id"] for r in rows])
 
     return [o.model_dump(mode="json") for o in obligations]
 
@@ -273,8 +261,6 @@ async def get_goals(
 
     rows = await pool.fetch(query, *params)
     goals = [Goal(**dict(r)) for r in rows]
-    if rows:
-        await touch("goals", [r["id"] for r in rows])
 
     return [g.model_dump(mode="json") for g in goals]
 
@@ -287,8 +273,6 @@ async def recent_episodes(n: int = 5) -> list[dict]:
         "SELECT * FROM episodes ORDER BY occurred_at DESC LIMIT $1", n
     )
     episodes = [Episode(**dict(r)) for r in rows]
-    if rows:
-        await touch("episodes", [r["id"] for r in rows])
 
     return [e.model_dump(mode="json") for e in episodes]
 
